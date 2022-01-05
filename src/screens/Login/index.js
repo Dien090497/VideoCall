@@ -6,8 +6,8 @@ import { ACC_NAME, APP_NAME } from "../../assets/Constants";
 import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('user');
+  const [password, setPassword] = useState('abc123456');
 
   const voximplant = Voximplant.getInstance();
   const navigation = useNavigation();

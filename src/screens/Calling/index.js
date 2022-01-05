@@ -28,6 +28,7 @@ export default function Calling() {
   const voximplant = Voximplant.getInstance();
 
   const call = useRef(incomingCall);
+  const endPoint = useRef(null);
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -68,6 +69,8 @@ export default function Calling() {
 
     const answerCall = () =>{
       subscribeToCallEvent();
+      endPoint.current = call.current.getEndpoints()[0]
+      subscribeToEndpointEvent();
       call.current.answer(callSetting)
     }
 
@@ -86,7 +89,16 @@ export default function Calling() {
       })
       call.current.on(Voximplant.CallEvents.LocalVideoStreamAdded, callEvent=>{
         setLocalVideoStreamId(callEvent.videoStream.id)
-        navigation.navigate('Contacts');
+      })
+      call.current.on(Voximplant.CallEvents.EndpointAdded, callEvent=>{
+        endPoint.current = callEvent.endpoint;
+        subscribeToEndpointEvent()
+      })
+    }
+
+    const subscribeToEndpointEvent = async () =>{
+      endPoint.current.on(Voximplant.EndpointEvents.RemoteVideoStreamAdded, endpoint =>{
+        setRemoteVideoStreamId(endpoint.videoStream.id)
       })
     }
 
@@ -136,9 +148,18 @@ export default function Calling() {
         <Ionicons name={"arrow-back"} size={30} color={"white"} />
       </Pressable>
       <Voximplant.VideoView
+        videoStreamId={remoteVideoStreamId}
+        style={styles.remoteVideo}
+        scaleType={'fill'}
+      />
+
+      <Voximplant.VideoView
         videoStreamId={localVideoStreamId}
         style={styles.localVideo}
+        showOnTop={true}
+        scaleType={'fill'}
       />
+
       <View style={styles.cameraPreview}>
         <Text style={styles.name}>{user?.user_display_name}</Text>
         <Text style={styles.phoneNumber}>{callStatus}</Text>

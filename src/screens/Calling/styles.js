@@ -59,5 +59,13 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 100,
     right: 10
+  },
+  remoteVideo:{
+    backgroundColor: '#f749ff',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left:0,
+    bottom: 0
   }
 });
